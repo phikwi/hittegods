@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+	<title></title>
+	<script src="https://use.fontawesome.com/235af9516a.js"></script>
+	<link rel ="stylesheet" href="stylesheet/main.css">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	
+	<link href="https://unpkg.com/material-components-web@v4.0.0/dist/material-components-web.min.css" rel="stylesheet">
+	<script src="https://unpkg.com/material-components-web@v4.0.0/dist/material-components-web.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Knewave&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Fredoka+One&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Baloo+Bhai&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Balthazar&display=swap" rel="stylesheet">
+	
+</head>
+
+ <body> 
+ 
+    
+	
+		
+		
+		<nav class="navbar  navbar-expand-lg  navbar-dark bg-dark" >
+			<div class="container">
+			<a class="navbar-brand" style="margin-left: 12px;" href="/"> <span class="logotext"> Hittegods </span></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			  <span class="navbar-toggler-icon"></span>
+			</button>
+		  
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			  <ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+				  <a class="nav-link" href="#"> <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item active">
+				  <a class="nav-link" href="/"> <i class="fa fa-home fa-2x"></i> </a>
+				</li>
+			
+				<button class="btn btn-info" type="submit" style="margin-left:600px;" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >  <span style="font-family: 'Fredoka One'; font-size:15px; font-weight:lighter; ">Lägg in annons</span> </button>
+			  </ul>
+			  
+				 
+			  <div class="collapse" id="collapseExample">
+				   
+				<form action ="/postItem" method="POST" class="postForm" enctype="multipart/form-data">
+					<div class="form-group">
+					
+					    <input type="text" class="form-control" id="itemTitle" name ="item[title]" placeholder="Varan">
+
+					</div>
+
+					<div class="form-group">
+					  
+					  <input type="text" class="form-control" id="location" name ="item[location]" placeholder="Området den Hittades">
+					</div>
+				
+                    <div class="form-group">
+					  
+						<input type="text" class="form-control" id="contacts"  name ="item[contact]" placeholder="kontakt-info(mail eller telephone)">
+					  </div>
+
+					<div class="form-group">
+					  
+						<input type="date" class="form-control" id="date"  name ="item[date]" placeholder="Datum">
+					</div>  
+				  
+					<div class="form-group">
+						<label for="exampleFormControlFile1">Laddar upp bild</label>
+						<input type="file" class="form-control-file"  name='itemImage' id="imagefile">
+					  </div>
+					<button type="submit" class="btn btn-info">Submit</button>
+				  </form>
+				
+			   	
+			  </div>
+				
+			
+			</div>
+
+		   </div>
+		  </nav>
+
+		  <div class ="bodyContainer">
+
+		 
+
+	
+	  
+	
+	
