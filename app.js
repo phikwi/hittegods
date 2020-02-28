@@ -37,7 +37,7 @@ app.use('/uploads',express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: true}));
 
 //mongo config
-mongoose.connect('mongodb://localhost/hittegods', {useNewUrlParser: true, 
+mongoose.connect('mongodb+srv://phikwi:Markspain1@cluster0-ieaz1.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true, 
         useUnifiedTopology: true});
 
 var db = mongoose.connection;
