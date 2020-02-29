@@ -143,4 +143,4 @@ app.post('/search',(req,res)=>{
 
 
 //Server
-app.listen(port, () => console.log(`listening on port ${port}!`))
+app.listen(process.env.PORT || 5000)
