@@ -44,7 +44,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
  
-  console.log("Connected to db");
+  
 });
 
 
@@ -143,4 +143,4 @@ app.post('/search',(req,res)=>{
 
 
 //Server
-app.listen(port, () => console.log(`listening on port ${port}!`))
+app.listen(port);
