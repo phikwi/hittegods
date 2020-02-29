@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/a14bb9f5-1349-4d31-ae50-481675ef25bd/resourceGroups/hittegods/providers/Microsoft.Web/sites/hittegods",
+    "appService.deploySubpath": ""
+}
