@@ -38,7 +38,7 @@
         <div class="col">
             
           </div>
-          <div class="col-6">
+          <div class="col-lg-6 col-sm-12 col-xs-12">
             <h1 style=" font-family:'Lobster'; font-size:35px; margin-top: 40px; margin-bottom: 20px; margin-left: 200px; "> Tappat på    </h1>
           </div>
           <div class="col">
@@ -89,19 +89,18 @@
   
   <div class="row">
            
-       <div class="col">        
-       </div>
-       <div class="col-6">
-           <h1 style=" font-family:'Lobster'; font-size:35px; margin-top: 40px; margin-bottom: 20px; margin-left: 200px; ">  Hittat idag  </h1>
+     
+       <div class="col-lg-8 col-sm-12 col-xs-12">
+           <h1 style=" font-family:'Lobster'; font-size:35px; margin-top: 20px; margin-bottom: 20px; margin-left: 100px; ">  Hittat idag  </h1>
     
       </div>
       <div class="col">
   
        </div>
   </div> 
-  
+  <div class="container" style="margin-left: 20px;">
   <div class="row">
-     
+    
        <%if(foundItems === undefined || foundItems.length == 0) { %>
                   
            <h3> Inget Hittades </h3>
@@ -112,9 +111,9 @@
     
 
 
-      <div class="col-3 cardStyle">    
+      <div class="col-lg-3 col-xs-12 col-sm-12 col-md-4  cardStyle">    
        <div class="card " style="width: 16rem; height: 22rem; margin-right: 10px 10px 10px 10px; 	box-shadow: 0 7px 4px #5bc0de;">
-         <img class="card-img-top" src= "<%=item.imagePath %>" alt="Card image cap">
+         <img class="card-img-top" style =" height: 50%;" src= "<%=item.imagePath %>" alt="Card image cap">
              <div class="card-body" >
                     <h5 class="card-title" style=" font-family: 'Fredoka One'"> <%=item.title %> </h5>
                     <p class="card-text"  style="font-family: 'Balthazar' ;">Plats: <%=item.location %> </p>
@@ -123,7 +122,9 @@
               </div>
        </div>
       </div> 
-    <% })%>      
+    <% })%>    
+    
+  </div>
   </div>
   
   <div class="row">
