@@ -75,7 +75,7 @@ app.get('/', (req, res) =>
        {      
                 let scrapedItems=[];
 
-                scrape(2).then(results=>{
+               scrape(2).then(results=>{
 
                 scrapedItems = [...results]
                   
@@ -88,7 +88,7 @@ app.get('/', (req, res) =>
                         else{
                                
                                 
-                          res.render("home",{foundItems:foundItems,scrapedItems,scrapedItems});
+                          res.render("home",{foundItems:foundItems,scrapedItems:scrapedItems});
                            
                         }
         
@@ -164,7 +164,7 @@ app.post('/search',(req,res)=>{
 //Scraper
 async function scrape(p){
 
-        const browser = await puppeteer.launch({ headless: false});
+        const browser = await puppeteer.launch({ headless: true});
         const page = await browser.newPage();
         await page.setViewport({ width: 1920, height: 1080 });
       
@@ -185,7 +185,7 @@ async function scrape(p){
          }
     
         );
-      //  console.log(mainNode)  
+    
        
         await browser.close();
 
