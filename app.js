@@ -1,4 +1,5 @@
 //Dependencies
+const puppeteer = require('puppeteer');
 const express = require('express');
 let ejs = require('ejs');
 const app = express();
@@ -71,30 +72,40 @@ const Item = mongoose.model('Item',itemSchema);
 //Home route
 app.get('/', (req, res) =>  
 
-       { 
-               Item.find((err,foundItems)=>{
-                
-                if(err){
-                        console.log(err);
-                }
-                
-                else{
-                        
-                  res.render("home",{foundItems:foundItems});
-                }
+       {      
+                let scrapedItems=[];
 
-               })
-       
+                scrape(2).then(results=>{
+
+                scrapedItems = [...results]
+                  
+                Item.find((err,foundItems)=>{
+                
+                        if(err){
+                                console.log(err);
+                        }
+                        
+                        else{
+                               
+                                
+                          res.render("home",{foundItems:foundItems,scrapedItems,scrapedItems});
+                           
+                        }
+        
+                       })
+               
+                  
+              })       
+             
+        
+              
          }
     
         );
  
-
-
  //post Item route
  
  app.post('/postItem',upload.single('itemImage'),(req,res)=>{
-
 
         const bodyContent = req.body.item;
          
@@ -124,7 +135,12 @@ app.post('/search',(req,res)=>{
 
         const  searchTitle= req.body.title;
         const searchLocation = req.body.location;  
-      
+        let scrapedItems=[];
+
+        scrape(2).then(results=>{
+
+        scrapedItems = [...results]
+          
         Item.find({"location":{ $regex: `${searchLocation}`, $options: 'i' },
                    "title":{ $regex: `${searchTitle}`, $options: 'i' }},(err,foundItems)=>{
                 
@@ -134,12 +150,60 @@ app.post('/search',(req,res)=>{
               
                 else{
                       
-                  res.render("home",{foundItems:foundItems});
+                  res.render("home",{foundItems:foundItems,scrapedItems:scrapedItems});
                 }
 
                })
 
+        })
+
 });
+
+
+
+//Scraper
+async function scrape(p){
+
+        const browser = await puppeteer.launch({ headless: true});
+        const page = await browser.newPage();
+        await page.setViewport({ width: 1920, height: 1080 });
+        await page.setRequestInterception(true);
+         
+        page.on('request', (req) => {
+          if(req.resourceType() == 'stylesheet' || req.resourceType() == 'font' || req.resourceType() == 'image'){
+              req.abort();
+          }
+          else {
+              req.continue();
+          }
+        });
+    
+    
+         await page.goto(`https://www.mtrnordic.se/hittegods/sok-hittegods/?sl=1&sl=3&pageNumber=${p}`, {waitUntil: 'networkidle0'});
+       
+         let mainNode =  await page.$eval( '#sort-found-and-lost-table',  function(el){
+         let results = [];
+    
+              for(let i=1;i<16;i++){
+          
+              results.push({date:el.getElementsByTagName('tr')[i].getElementsByTagName('td')[0].textContent,name:el.getElementsByTagName('tr')[i].getElementsByTagName('td')[1].textContent,
+                    place:el.getElementsByTagName('tr')[i].getElementsByTagName('td')[2].textContent
+                  })
+              }
+        
+               return results;
+    
+         }
+    
+        );
+      //  console.log(mainNode)  
+       
+        await browser.close();
+
+        return mainNode
+    }
+
+
 
 
 //Server

@@ -94,6 +94,7 @@
            <h1 style=" font-family:'Lobster'; font-size:35px; margin-top: 20px; margin-bottom: 20px; margin-left: 100px; ">  Hittat idag  </h1>
     
       </div>
+
       <div class="col">
   
        </div>
@@ -129,12 +130,14 @@
   
   <div class="row">
        
-    <div class="col">        
+    <div class="col">  
+    
     </div>
     <div class="col-2">
         
         <img src="assets/sl.png" class="slLogo">
-      
+       
+        
  
    </div>
    <div class="col">
@@ -153,24 +156,16 @@
         </tr>
       </thead>
       <tbody>
+
+
+    <%scrapedItems.forEach(function(item){%> 
         <tr>
-  
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+           <td> <%= item.date %> </td>
+           <td> <%= item.name %> </td> 
+           <td> <%= item.place %> </td>
         </tr>
-        <tr>
-        
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-        
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
+      
+        <%})%>
       </tbody>
     </table>
 
