@@ -164,7 +164,10 @@ app.post('/search',(req,res)=>{
 //Scraper
 async function scrape(p){
 
-        const browser = await puppeteer.launch({ headless: true});
+       // const browser = await puppeteer.launch({ headless: true});
+       const browser = await puppeteer.launch({
+        ignoreDefaultArgs: ['--disable-extensions'],
+      });
         const page = await browser.newPage();
         await page.setViewport({ width: 1920, height: 1080 });
       
