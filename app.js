@@ -73,11 +73,6 @@ const Item = mongoose.model('Item',itemSchema);
 app.get('/', (req, res) =>  
 
        {      
-                let scrapedItems=[];
-
-               scrape(2).then(results=>{
-
-                scrapedItems = [...results]
                   
                 Item.find((err,foundItems)=>{
                 
@@ -88,21 +83,38 @@ app.get('/', (req, res) =>
                         else{
                                
                                 
-                          res.render("home",{foundItems:foundItems,scrapedItems:scrapedItems});
+                          res.render("home",{foundItems:foundItems});
                            
                         }
         
                        })
-               
-                  
-              })       
-             
-        
-              
          }
     
         );
  
+
+//get sl info 
+
+
+app.get('/sl',(req,res)=>{
+
+        let scrapedItems=[];
+
+        scrape(2).then(results=>{
+
+         scrapedItems = [...results]
+           
+              
+         res.render("sl",{scrapedItems:scrapedItems});
+    
+        })
+
+
+
+
+})
+
+
  //post Item route
  
  app.post('/postItem',upload.single('itemImage'),(req,res)=>{
@@ -130,16 +142,15 @@ app.get('/', (req, res) =>
    
         })
  });
+ 
+
+ 
 
 app.post('/search',(req,res)=>{
 
         const  searchTitle= req.body.title;
         const searchLocation = req.body.location;  
-        let scrapedItems=[];
-
-        scrape(2).then(results=>{
-
-        scrapedItems = [...results]
+        
           
         Item.find({"location":{ $regex: `${searchLocation}`, $options: 'i' },
                    "title":{ $regex: `${searchTitle}`, $options: 'i' }},(err,foundItems)=>{
@@ -150,12 +161,12 @@ app.post('/search',(req,res)=>{
               
                 else{
                       
-                  res.render("home",{foundItems:foundItems,scrapedItems:scrapedItems});
+                  res.render("home",{foundItems:foundItems});
                 }
 
                })
 
-        })
+        
 
 });
 
