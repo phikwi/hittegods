@@ -9,6 +9,9 @@ const mongoose = require('mongoose')
 const DateOnly = require('mongoose-dateonly')(mongoose);
 const   mongooseIntl = require('mongoose-intl')
 const bodyParser =require("body-parser");
+const session = require('express-session');
+
+const flash = require('connect-flash');
 const multer = require('multer');
 const storage = multer.diskStorage({
 
@@ -33,9 +36,22 @@ fileSize: 1024 * 1024 * 5
 
 //config
 app.set('view engine', 'ejs');
+app.use(flash());
 app.use(express.static("public"));
 app.use('/uploads',express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(session({ cookie: { maxAge: 60000 }, 
+                  secret: 'woot',
+                  resave: false, 
+                  saveUninitialized: false}));
+app.use(function(req, res, next){
+    
+        res.locals.error= req.flash("error");
+         res.locals.success= req.flash("success");
+        next();
+    })
+
 
 //mongo config
 mongoose.connect('mongodb+srv://phikwi:Markspain1@cluster0-ieaz1.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true, 
@@ -82,8 +98,10 @@ app.get('/', (req, res) =>
                         
                         else{
                                
-                                
+                        
                           res.render("home",{foundItems:foundItems});
+                         
+                         
                            
                         }
         
@@ -120,17 +138,26 @@ app.get('/sl',(req,res)=>{
  app.post('/postItem',upload.single('itemImage'),(req,res)=>{
 
         const bodyContent = req.body.item;
+
+        
+       
+        if( bodyContent.title !="" && bodyContent.location !="" &&  bodyContent.contact!="" && 
          
-        const itemToAdd = new Item({
-         title:bodyContent.title,
-         location:bodyContent.location,
-         contactInfo:bodyContent.contact,
-         dateFound:bodyContent.date ,
-         imagePath:req.file.path  
+          bodyContent.date !="" &&  bodyContent.path !="" 
+         
+        ){
 
-        }) 
-
-        itemToAdd.save(function(err){
+              
+                const itemToAdd = new Item({
+                        title:bodyContent.title,
+                        location:bodyContent.location,
+                        contactInfo:bodyContent.contact,
+                        dateFound:bodyContent.date ,
+                        imagePath:req.file.path  
+               
+                       }) 
+                   
+            itemToAdd.save(function(err){
              
                 if(err){
                          console.log(err);
@@ -140,7 +167,18 @@ app.get('/sl',(req,res)=>{
                         res.redirect('/');
                 }
    
-        })
+           })
+
+        }
+
+        else{
+
+            
+                req.flash("error","Fyll i alla fält"); 
+                res.redirect("/");     
+                 
+        }
+      
  });
  
 
@@ -160,8 +198,9 @@ app.post('/search',(req,res)=>{
                 }
               
                 else{
-                      
+                          
                   res.render("home",{foundItems:foundItems});
+                 
                 }
 
                })
@@ -176,7 +215,9 @@ app.post('/search',(req,res)=>{
 async function scrape(p){
 
        // const browser = await puppeteer.launch({ headless: true});
-       const browser = await puppeteer.launch({ args: [ '--no-sandbox', '--disable-setuid-sandbox' ] });
+       const browser = await puppeteer.launch({executablePath:'/usr/bin/google-chrome-stable',
+                                                headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
+
         const page = await browser.newPage();
         await page.setViewport({ width: 1920, height: 1080 });
       

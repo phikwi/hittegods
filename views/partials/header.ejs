@@ -92,6 +92,26 @@
 
 		  <div class ="bodyContainer">
 
+			
+        
+				<% if(error && error.length > 0){ %>
+				   <div class="alert alert-primary" role="alert"> 
+					 <h3>
+					   <%=error%>   
+					 </h3>
+					</div>
+					  <% } %>
+					  
+				<% if (success && success.length > 0){ %> 
+					<div class="alert alert-success" role="alert"> 
+					  <h3>
+						<%=success%>   
+					  </h3>
+				 
+					</div> 
+				 <% } %>
+		
+
 		 
 
 	
