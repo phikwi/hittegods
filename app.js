@@ -47,9 +47,6 @@ app.use(function(req, res, next){
         next();
     })
 
-//mongo config
-mongoose.connect('mongodb+srv://phikwi:Markspain1@cluster0-ieaz1.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true, 
-        useUnifiedTopology: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
