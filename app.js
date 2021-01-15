@@ -13,22 +13,34 @@ const   mongooseIntl = require('mongoose-intl')
 const bodyParser =require("body-parser");
 const session = require('express-session');
 const flash = require('connect-flash');
+var aws = aws = require('aws-sdk');
 const multer = require('multer');
-const storage = multer.diskStorage({
-        destination :function(req,file,cb){
-           
-                cb(null,'./uploads')
-        },
-        filename: function(req,file,cb){
+multerS3 = require('multer-s3');
 
-                cb(null, file.originalname)
-        }
-})
+const MulterAzureStorage = require('multer-azure-blob-storage').MulterAzureStorage;
+require('dotenv').config();
 
-const upload = multer({storage:storage, limits:{
-fileSize: 1024 * 1024 * 5
 
-}});
+//azure
+const azureStorage = new MulterAzureStorage({
+        connectionString: process.env.azure_connection_string.,
+        accessKey: process.env.azure_access_key,
+        accountName: 'diadstorage2020',
+        containerName: 'hittegods',
+        
+        containerAccessLevel: 'blob',
+        urlExpirationTime: 60
+      });
+      
+      const upload = multer({
+        storage: azureStorage
+      });
+      
+
+
+
+
+
 //config
 app.set('view engine', 'ejs');
 app.use(flash());
@@ -47,6 +59,9 @@ app.use(function(req, res, next){
         next();
     })
 
+//mongo config
+mongoose.connect('mongodb+srv://phikwi:${process.env.mongo_pass}@cluster0-ieaz1.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true, 
+        useUnifiedTopology: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -70,16 +85,60 @@ itemSchema.plugin(mongooseIntl, { languages: ['en', 'de', 'sv'], defaultLanguage
 
 const Item = mongoose.model('Item',itemSchema);
 
+
+
+////
+
+
+const hitteSchema = new mongoose.Schema({
+        name:String,
+        visitors:Number 
+      
+      })      
+      const hitteVisitor = mongoose.model('hittev',hitteSchema);
+      
+   
+
+      function increaseVcount(){
+   
+        hitteVisitor.findOneAndUpdate(
+               
+          { _id:"5eca4a881fca230c88d073ef"},
+             
+            { $inc: { visitors: +1}},function(err,updatedVisitor){
+                if(err){
+                  console.log(err);
+                }
+                else{
+          
+                }
+            }
+        )    
+         
+      
+      }
+     
+
+
+
+
+
+
+//
+
+
 //Routes
 
 //Home route
 app.get('/', (req, res) =>  
        {             
+               
                 Item.find((err,foundItems)=>{
                         if(err){
                                 console.log(err);
                         }
                         else{
+                                 increaseVcount();
                           res.render("home",{foundItems:foundItems});
                         }
         
@@ -98,18 +157,23 @@ app.get('/sl',(req,res)=>{
          res.render("sl",{scrapedItems:scrapedItems});
         })*/
         
-        scrapee().then(()=>{
-               
-             scrapedItems =[...scrapedDocuments];
-             res.render("sl",{scrapedItems:scrapedItems});
-           
-        });
+
+         scrapee().then(()=>{
+                 
+                scrapedItems =[...scrapedDocuments]
+
+                res.render("sl",{scrapedItems:scrapedItems});
+
+         })
+
 
    })
 
  //post Item route
  app.post('/postItem',upload.single('itemImage'),(req,res)=>{
         const bodyContent = req.body.item;
+        console.log(req.file)
+      //  console.log(req.file);
         if( bodyContent.title !="" && bodyContent.location !="" &&  bodyContent.contact!="" && 
          
           bodyContent.date !="" &&  bodyContent.path !="" 
@@ -120,9 +184,11 @@ app.get('/sl',(req,res)=>{
                         location:bodyContent.location,
                         contactInfo:bodyContent.contact,
                         dateFound:bodyContent.date ,
-                        imagePath:req.file.path  
+                        imagePath:'https://diadstorage2020.blob.core.windows.net/hittegods/' + req.file.blobName
                
                        }) 
+         
+
                    
             itemToAdd.save(function(err){
              
@@ -198,6 +264,7 @@ async function scrape(p){
     }
 
    function  scrapee(){ 
+
         return fetch('https://www.mtrnordic.se/hittegods/sok-hittegods/?sl=1')
           .then(res => res.text())
           .then(pageBody=>{
@@ -216,10 +283,22 @@ async function scrape(p){
                    newItem = {date:itemDateSelector,name:itemNameSelector,place:itemPlaceSelector};
                  scrapedDocuments.push(newItem);
               }
-
-
             })   
 }
+
+function send(){
+         
+     
+        /*client.messages
+        .create({
+           body: 'Request',
+           from: '+14028108304',
+           to:   '+46702840647'
+         });
+          */    
+    
+       }
+
 
 //Server
 app.listen(process.env.PORT || 5000)
